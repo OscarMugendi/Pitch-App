@@ -15,6 +15,8 @@ class User(UserMixin, db.Model):
     #upvote = db.relationship('Upvote',backref='user',lazy='dynamic')
     #downvote = db.relationship('Downvote',backref='user',lazy='dynamic')
 
+    secure_password = db.Column(db.String(255))
+
     @property
     def set_password(self):
         raise AttributeError('You cannot read the password attribute')
