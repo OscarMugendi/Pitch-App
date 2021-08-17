@@ -1,7 +1,7 @@
 import os
 
 class Config:
-    debug = True
+    DEBUG = True
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLAlchemy_DATABASE_URI = 'postgresql+psycopg2://oscar:codingstudent@localhost/pitchapp'
     SQLALCHEMY_TRACK_MODIFICATIONS = True

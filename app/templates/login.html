@@ -1,0 +1,36 @@
+
+{% extends 'base.html'%}
+
+{% block content%}
+{% block styles %}
+{{super()}}
+
+{% endblock %}
+
+<div class="container">
+
+    <div class="container">
+        <div class="division wrapper fadeInDown">
+            <h3 class="text-center login-text" id="login"> Log in to your account</h3>
+            <div class="alert alert-danger" role="alert">
+                {{error}}
+            </div>
+            <div class="division" id="centered-card">
+                <form action="/login" method="POST">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" placeholder="Username" name="username">
+                    <br>
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" placeholder="Password" name="password">
+                    <br>
+                    <button id="hellobutton" type="submit" class="d-block btn-success mx-auto">Login</button>
+                </form>
+                <br>
+                <p class="login-text" id="option-signup"> Don't have an account? <a href="/signup">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
