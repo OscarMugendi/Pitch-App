@@ -12,16 +12,6 @@ def index():
     return render_template('index.html', pitches=pitches)
 
 
-@main.route('/user/<uname>')
-def profile(uname):
-    user = User.query.filter_by(username = uname).first()
-
-    if user is None:
-        abort(404)
-
-    return render_template("profile.html", user = user)
-
-
 @main.route('/new_pitch', methods = ['POST','GET'])
 
 @login_required
