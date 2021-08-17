@@ -1,36 +1,26 @@
-
 {% extends 'base.html'%}
+{% import 'bootstrap/wtf.html' as wtf%}
 
-{% block content%}
-{% block styles %}
-{{super()}}
-
-{% endblock %}
-
-<div class="container">
-
-    <div class="container">
-        <div class="division wrapper fadeInDown">
-            <h3 class="text-center login-text" id="login"> Log in to your account</h3>
-            <div class="alert alert-danger" role="alert">
-                {{error}}
-            </div>
-            <div class="division" id="centered-card">
-                <form action="/login" method="POST">
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" placeholder="Username" name="username">
-                    <br>
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" placeholder="Password" name="password">
-                    <br>
-                    <button id="hellobutton" type="submit" class="d-block btn-success mx-auto">Login</button>
-                </form>
-                <br>
-                <p class="login-text" id="option-signup"> Don't have an account? <a href="/signup">Sign Up</a></p>
-            </div>
+{% block content %}
+<div class="container"> 
+    <div class="row">
+      <div class= "col-md-2"> </div>
+      <div class="col-md-8">
+      <!--Flash message -->
+      {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
         </div>
+      {% endfor %}
+      <!-- Login form -->
+      <br>
+      {{wtf.quick_form(LoginForm)}}
+      <br>
+      <p> Don't have an account? <a href="{{url_for('auth.login')}}">Sign up today!</a></p>
+     </div>
+     <div clas="col-md-2"> </div>
     </div>
-
 </div>
 
-{% endblock %}
+{% endblock%}
