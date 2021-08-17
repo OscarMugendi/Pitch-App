@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<hr>
+<div class="container">
+    <div class="row">
+        <div>
+            <h2><b><u> {{user.username| capitalize}} </u></b></h2>
+            <br>
+            <h4>Email address:  {{user.email}} </h4>
+        </div>
+    </div>
+</div>
+<hr>
+
+{% endblock %}
