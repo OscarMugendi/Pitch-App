@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for
 from flask_login import login_required, current_user
-
+from .. import db
 from . import main
 from .forms import PitchForm, CommentForm
 from ..models import User
