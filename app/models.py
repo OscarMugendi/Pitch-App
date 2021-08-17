@@ -15,18 +15,20 @@ class User(UserMixin, db.Model):
     upvote = db.relationship('Upvote',backref='user',lazy='dynamic')
     downvote = db.relationship('Downvote',backref='user',lazy='dynamic')
 
-    secure_password = db.Column(db.String(255))
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
-    @property
-    def set_password(self):
-        raise AttributeError('You cannot read the password attribute')
+    def set_password(self, password):
+        password_hash = generate_password_hash(password)
+        self.password = password_hash
 
-    @set_password.setter
-    def password(self, password):
-        self.secure_password = generate_password_hash(password)
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
     def verify_password(self, password):
-        return check_password_hash(self.secure_password,password) 
+        return check_password_hash(self.password,password) 
     
     def __repr__(self):
         return f'User {self.username}'
@@ -46,6 +48,10 @@ class Pitch(db.Model):
     def save_pitch(self):
         db.session.add(self)
         db.session.commit()
+        
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
    
     def __repr__(self):
         return f'Pitch {self.post}'
@@ -60,6 +66,10 @@ class Comment(db.Model):
 
     def save_comment(self):
         db.session.add(self)
+        db.session.commit()
+        
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()
 
     @classmethod
@@ -83,11 +93,20 @@ class Upvote(db.Model):
     def save_upvote(self):
         db.session.add(self)
         db.session.commit()
+        
+    def upvote(cls, id):
+        upvote_post = Upvote(user=current_user, post_id=id)
+        upvote_post.save()
 
     @classmethod
     def get_upvotes(cls,id):
         upvote = Upvote.query.filter_by(pitch_id=id).all()
         return upvote
+    
+    @classmethod
+    def all_upvotes(cls):
+        upvotes = Upvote.query.order_by('id').all()
+        return upvotes
 
     def __repr__(self):
         return f'{self.user_id}:{self.pitch_id}'
@@ -105,9 +124,18 @@ class Downvote(db.Model):
         db.session.add(self)
         db.session.commit()
         
+    def downvote(cls, id):
+        downvote_post = Downvote(user=current_user, post_id=id)
+        downvote_post.save()
+        
     @classmethod
     def get_downvotes(cls,id):
         downvote = Downvote.query.filter_by(pitch_id=id).all()
+        return downvote
+    
+    @classmethod
+    def all_downvotes(cls):
+        downvote = Downvote.query.order_by('id').all()
         return downvote
 
     def __repr__(self):

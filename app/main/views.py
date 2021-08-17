@@ -9,7 +9,7 @@ from ..models import User,Pitch,Comment,Upvote,Downvote
 @main.route('/')
 def index():
     pitches = Pitch.query.all()
-    return render_template('index.html')
+    return render_template('index.html', pitches=pitches)
 
 
 @main.route('/user/<uname>')
