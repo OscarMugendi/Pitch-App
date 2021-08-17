@@ -23,8 +23,13 @@ def create_app(config_name):
     app.register_blueprint(main_blueprint)
     
     login_manager.init_app(app)
+    from app.models import User
     db.init_app(app)
     bootstrap.init_app(app)
     mail.init_app(app)
+    
+    @login_manager.user_loader
+    def load_user(user_id):
+        user = User.query.filter_by(id=user_id).first()
     
     return app

@@ -38,7 +38,7 @@ class Pitch(db.Model):
     __tablename__ = 'pitches'
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(255),nullable = False)
-    post = db.Column(db.Text(), nullable = False)
+    pitch = db.Column(db.Text(), nullable = False)
     comment = db.relationship('Comment',backref='pitch',lazy='dynamic')
     upvote = db.relationship('Upvote',backref='pitch',lazy='dynamic')
     downvote = db.relationship('Downvote',backref='pitch',lazy='dynamic')
@@ -54,7 +54,7 @@ class Pitch(db.Model):
         db.session.commit()
    
     def __repr__(self):
-        return f'Pitch {self.post}'
+        return f'Pitch {self.pitch}'
 
 
 class Comment(db.Model):
@@ -95,8 +95,8 @@ class Upvote(db.Model):
         db.session.commit()
         
     def upvote(cls, id):
-        upvote_post = Upvote(user=current_user, post_id=id)
-        upvote_post.save()
+        upvote_pitch = Upvote(user=current_user, pitch_id=id)
+        upvote_pitch.save()
 
     @classmethod
     def get_upvotes(cls,id):
@@ -125,8 +125,8 @@ class Downvote(db.Model):
         db.session.commit()
         
     def downvote(cls, id):
-        downvote_post = Downvote(user=current_user, post_id=id)
-        downvote_post.save()
+        downvote_pitch = Downvote(user=current_user, pitch_id=id)
+        downvote_pitch.save()
         
     @classmethod
     def get_downvotes(cls,id):

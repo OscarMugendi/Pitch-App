@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% macro display_pitches(pitches) %}
+
+<div class="container">
+<div>
+    <br><br>
+</div>
+<div class="jumbotron">
+    <div class="overlay">
+        <h1 class="">Pitches</h1>
+        <a href="/new_pitch"><button class="btn">New Pitch</button></a>
+    </div>
+</div>
+<div class="card-columns">
+    {% if pitches %}
+    {% for my_pitch in pitches %}
+
+    <div class="card">
+        <div class="card-body">
+            <p>{{my_pitch.pitch}}</p>
+        </div>
+
+        <div class="card-footer foot_flex d-block mx-auto">
+            <a href="/comment/{{my_pitch.id}}"><button class="btn btn-info">Comment</button></a>
+            <a href="/upvote/{{my_pitch.id}}"><button class="btn btn-success">Upvote {{my_pitch.upvote.count()}}</button></a>
+            <h1>{{Upvotes}}</h1>
+            <a href="/downvote/{{my_pitch.id}}"><button class="btn btn-danger">Downvote {{my_pitch.downvote.count()}}</button></a>
+            <h4></h4>
+        </div>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+</div>
+</div>
+
+{% endmacro %}
