@@ -1,5 +1,0 @@
-Greetings, {{user.username}}.
-
-Welcome to the Pitch community.
-
-This is email is auto-generated once a new account has been successfully created.

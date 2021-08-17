@@ -5,14 +5,10 @@ from wtforms.validators import Required
 
 class PitchForm(FlaskForm):
     title = StringField('Title', validators=[Required()])
-    post = TextAreaField('Pitch', validators=[Required()])
-    submit = SubmitField('Post')
+    post = TextAreaField('Your Pitch', validators=[Required()])
+    submit = SubmitField('Pitch')
 
 
 class CommentForm(FlaskForm):
-    comment = TextAreaField('Comment', validators=[Required()])
-    submit = SubmitField('Post Comment')
-
-
-class Vote(FlaskForm):
-    submit = SelectField('Like')
+    comment = TextAreaField('Leave a Comment', validators=[Required()])
+    submit = SubmitField('Comment')
