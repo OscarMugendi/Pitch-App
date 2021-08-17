@@ -3,7 +3,7 @@ import os
 class Config:
     DEBUG = True
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLAlchemy_DATABASE_URI = 'postgresql+psycopg2://oscar:codingstudent@localhost/pitchapp'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:password@localhost/pitchapp'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     
     MAIL_SERVER = 'smtp.gmail.com'
@@ -15,13 +15,13 @@ class Config:
     
     
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:password@localhost/pitchapp'
     
 class TestConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:codingstudent@localhost/pitchapp'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:password@localhost/pitchapp'
     
 class DevConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:codingstudent@localhost/pitchapp'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:password@localhost/pitchapp'
     
     DEBUG = True
     ENV = 'development'
