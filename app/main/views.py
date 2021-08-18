@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, abort, request
 from flask_login import login_required, current_user
 from .. import db
 from . import main
@@ -15,26 +15,12 @@ def index():
 
 @main.route('/pitches')
 
-#@login_required
-def posts():
+@login_required
+def pitches():
     pitches = Pitch.query.all()
     upvotes = Upvote.query.all()
     user = current_user
     return render_template('pitch_display.html', pitches=pitches, upvotes=upvotes, user=user)
-
-
-@main.route('/user')
-
-@login_required
-def user():
-    username = current_user.username
-    user = User.query.filter_by(username=username).first()
-    
-    if user is None:
-        return ('not found')
-    
-    title = "User"
-    return render_template('profile.html', user=user, title=title)
 
 
 @main.route('/user/<uname>')
@@ -42,11 +28,13 @@ def user():
 @login_required
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
+    user_id = current_user._get_current_object().id
+    pitches = Pitch.query.filter_by(user_id = user_id).all()
 
     if user is None:
         abort(404)
 
-    return render_template("profile.html", user = user)
+    return render_template("profile.html", user = user, pitches=pitches)
 
 
 @main.route('/new_pitch', methods = ['POST','GET'])
@@ -58,8 +46,8 @@ def new_pitch():
     if form.validate_on_submit():
         title = form.title.data
         pitch = form.pitch.data
-        user_id = current_user.get_current_object().id
-        new_pitch_object = Pitch(pitch=pitch,user_id=user_id,title=title)
+        user_id = current_user
+        new_pitch_object = Pitch(pitch=pitch,user_id=current_user.get_current_object().id,title=title)
         new_pitch_object.save_pitch()
         return redirect(url_for('main.index'))
         
@@ -73,7 +61,7 @@ def comment(pitch_id):
     form = CommentForm()
     pitch = Pitch.query.get(pitch_id)
     user = User.query.all()
-    comments = Comment.query.filter_by(pitch_id = pitch_id).all()
+    all_comments = Comment.query.filter_by(pitch_id = pitch_id).all()
     
     if form.validate_on_submit():
         comment = form.comment.data 
@@ -85,24 +73,52 @@ def comment(pitch_id):
         return redirect(url_for('.comment', pitch_id = pitch_id,user_id=user_id))
     
     title = "Comment"
-    return render_template('comment.html', form =form, pitch = pitch,comments=comments, user=user, title=title)
+    return render_template('comment.html', form =form, pitch = pitch,all_comments=all_comments, user=user, title=title)
 
 
 @main.route('/upvote/<int:id>',methods = ['POST','GET'])
 
 @login_required
 def upvote(id):
-    pitch = Pitch.query.get(id)
-    new_upvote = Upvote(pitch=pitch, upvote=1)
+    get_pitches = Upvote.get_upvotes(id)
+    valid_string = f'{current_user.id}:{id}'
+    
+    for pitch in get_pitches:
+        to_str = f'{pitch}'
+        print(valid_string+" "+to_str)
+        
+        if valid_string == to_str:
+            
+            return redirect(url_for('main.index',id=id))
+        
+        else:           
+            continue
+        
+    new_upvote = Upvote(user = current_user, pitch_id=id)
     new_upvote.save()
-    return redirect(url_for('main.pitches'))
+    
+    return redirect(url_for('main.index',id=id))
 
 
 @main.route('/downvote/<int:id>',methods = ['POST','GET'])
 
 @login_required
 def downvote(id):
-    pitch = Pitch.query.get(id)
-    new_downvote = Downvote(pitch=pitch, downvote=1)
+    pitch = Downvote.get_downvotes(id)
+    valid_string = f'{current_user.id}:{id}'
+    
+    for p in pitch:
+        to_str = f'{p}'
+        print(valid_string+" "+to_str)
+        
+        if valid_string == to_str:
+            
+            return redirect(url_for('main.index',id=id))
+        
+        else:
+            continue
+        
+    new_downvote = Downvote(user = current_user, pitch_id=id)
     new_downvote.save()
-    return redirect(url_for('main.pitches'))
+    
+    return redirect(url_for('main.index',id = id))

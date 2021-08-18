@@ -1,29 +1,41 @@
 {% extends 'base.html'%}
-
-{% from 'comment_macro.html' import display_comments%}
 {% import 'bootstrap/wtf.html' as wtf %}
-{% block styles %}
-{{super()}}
-
-{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="jumbotron">
-        <h1>Comments</h1>
-        <a href="/pitches"><button class="btn">Pitch</button></a>
-    </div>
+    <div class="container" id="all_comments" >
+        <div class="row">
 
-    <div class="row col-md-12">
-        <div class="col-md-4">
-            <div class="text-white">{{wtf.quick_form(form)}}</div>
-        </div>
-    
-        <div class="col-md-8">
-            <h2 class="text-center text-white">Comment History</h2>
-            <p>{{display_comments(comments)}}</p>
-        </div>
-    </div>
-</div>
+            {% if all_comments %}
+                <div class="col-md" >
+                    <h3 class="text-center" id="coms">Comments</h3>
 
+                    {% for comment in all_comments %}
+                       <div class="card w-90 mb-3" >
+                           <div class="card-body">
+                            <h5>{{comment.pitch.title}}</h5>
+                             <p class="card-title">{{ comment.comment }}</p>
+                             <p class="card-text">- {{comment.user.username}}</p>
+                           </div>
+                       </div>
+                    {% endfor %}
+
+                   </div>
+
+                   <div class="col-md  commentform" >
+                        {{wtf.quick_form(form)}}
+                   </div>
+               </div>
+            {%else%}
+
+            <div class="card w-90 mb-3">
+                <div class="card-body">
+                  <p class="card-title">No comments available.</p>
+                </div>
+            </div> 
+            <div class="col-md">
+                    {{wtf.quick_form(form)}}
+                </div>
+            {%endif%}
+    </div>
+   
 {% endblock%}

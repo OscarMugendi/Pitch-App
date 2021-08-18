@@ -1,31 +1,22 @@
 {% extends 'base.html'%}
-<!--{% from 'pitch_display_macro.html' import display_pitches%}-->
-{% block content%}
-{% block styles %}
-{{super()}}
+{% import 'macros.html' as macro %}
 
-{% endblock %}
-
-<div class="bgimage container">
-    <div class="p-3 p-md-5 m-md-3 text-center bg-transparent">
-        <div class="col-md-12 p-lg-5 mx-auto my-5">
-            <h1 class="display-4 font-weight-normal text-white"style="font-size:40px">Pitch App</h1>
-            <br>
-            <hr>
-            <br>
-            <div class="container" id="buttons d-block mx-auto">
-                <a class="btn btn-block btn-primary" href="/pitches"style="font-size:40px"><b>View community pitches...</b></a>
-                <br>
-                <a class="btn btn-block btn-success" href="/new_pitch"style="font-size:40px"><b>Create new pitch...</b></a>
-            </div>
+{% block content %}
+    
+<div  class="container">
+    <ul class="nav nav-pills nav-justified nav-fill" role="tablist">
+        <li class="nav-item" >
+            <a class="nav-link" data-toggle="tab" href="#all"><strong>Pitches</strong></a>
+        </li>
+    </ul>
+    <br>
+    <hr>
+    <br>
+    <div class="tab-content">
+        <div class="container tab-pane active"><br>
+            {{ macro.display(pitches) }}
         </div>
     </div>
 </div>
 <br>
-<hr>
-<br>
-<div class="container text-center">
-    <h5><b>A Mugendi Production. MIT License (2021)</b></h5>
-</div>
-<br>
-{% endblock %}
+{% endblock%}

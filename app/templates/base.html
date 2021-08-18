@@ -1,15 +1,22 @@
-{% extends 'bootstrap/base.html'%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pitch-App</title>
+    {% block styles %}
+    {% endblock %}
+</head>
 
-<!-- Navbar block  --> 
-{% block navbar %}
-    {% include 'navbar.html' %}
+
+<body class="body">
+        {% block navbar %}
+        {% include "navbar.html" %}
+        {% endblock %}
+        {% block content %}
+        {% endblock %}
+{% block scripts %}
 {% endblock %}
-
-{% block content%}
-
-{% endblock %}
-
-{% block pitch %}
-
-
-{% endblock %}
+</body>
+</html>

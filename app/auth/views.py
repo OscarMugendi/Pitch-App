@@ -4,34 +4,26 @@ from app.auth import auth
 from app.models import User
 from ..email import welcome_message
 from .. import db
+from .forms import RegistrationForm,LoginForm
 
 
 @auth.route('/login', methods = ['GET','POST'])
     
 def login():
-    if request.method == 'POST':
-        form = request.form
-        username = form.get('username')
-        password = form.get('password')
-        print(username)
-        user = User.query.filter_by(username=username).first()
-        
-        if user is None:
-            error = 'Authentication Error. Invalid username.'
-            return render_template('login.html', error=error)
-        
-        has_correct_password = user.verify_password(password)
-        print(has_correct_password)
-        
-        if not has_correct_password:
-            error = 'Authentication Error. Invalid password.'
-            return render_template('login.html', error=error)
-        
-        login_user(user)
-        return redirect('/')
+    form = LoginForm()
     
+    if form.validate_on_submit():
+        user = User.query.filter_by(username = form.username.data).first()
+        
+        if user != None and user.verify_password(form.password.data):
+            login_user(user,form.remember.data)
+            
+            return redirect(request.args.get('next') or url_for('main.index'))
+        
+        flash('Authentication Error!')
+        
     title = "Login"
-    return render_template('login.html', title=title)
+    return render_template('login.html', login_form = form, title=title)
 
 
 @auth.route('/logout')
@@ -44,43 +36,14 @@ def logout():
 @auth.route('/signup', methods = ["GET","POST"])
     
 def signup():
-    if request.method == 'POST':
-        form = request.form
-        username = form.get("username")
-        email = form.get("email")
-        password = form.get("password")
-        confirm_password = form.get("confirm_password")
+    form = RegistrationForm()
+    
+    if form.validate_on_submit():
+        user = User(email = form.email.data, username = form.username.data, password = form.password.data)
+        user.save()
+        welcome_message("Welcome to the Pitch Community!","email/welcome",user.email,user=user)
         
-        if username is None or password is None or email is None or confirm_password is None:
-            error = 'Please fill all the fields.'
-            return render_template('signup.html', error=error)
-        
-        if ' ' in username:
-            error = 'Username cannot contain spaces.'
-            return render_template('signup.html', error=error)
-        
-        if password != confirm_password:
-            error = "Passwords do not match!"
-            return render_template('signup.html', error=error)
-        
-        else:
-            user = User.query.filter_by(username=username).first()
-            
-            if user is not None:
-                error = 'This username is already in use.'
-                return render_template('signup.html', error=error)
-            
-            user = User.query.filter_by(email=email).first()
-            if user is not None:
-                error = 'This email address is already in use.'
-                return render_template('signup.html', error=error)
-            
-            user = User(username=username, email=email)
-            user.set_password(password)
-            user.save()
-            
-            welcome_message("Welcome to the Pitch App", "email/welcome", user.email, user=user)
-            return redirect(url_for('auth.login'))
-
-    title = "Sign Up"
-    return render_template('signup.html', title=title)
+        return redirect(url_for('auth.login'))
+    
+    title = "Signup"
+    return render_template('signup.html', registration_form = form, title=title)
