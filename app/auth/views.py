@@ -4,28 +4,15 @@ from app.auth import auth
 from app.models import User
 from ..email import welcome_message
 from .. import db
-from .forms import RegistrationForm, LoginForm
 
 
 @auth.route('/login', methods = ['GET','POST'])
-#def login():
-    #login_form = LoginForm()
-    #if login_form.validate_on_submit():
-        #user = User.query.filter_by(username = login_form.username.data).first()
-        #if user != None and user.verify_password(login_form.password.data):
-            #login_user(user,login_form.remember.data)
-            #return redirect(request.args.get('next') or url_for('main.index'))
-        
-        #flash('Invalid username or Password')
-        
-    #title = 'Login'
-    #return render_template('login.html', LoginForm = login_form, title=title)
     
 def login():
     if request.method == 'POST':
-        login_form = request.form
-        username = login_form.get('username')
-        password = login_form.get('password')
+        form = request.form
+        username = form.get('username')
+        password = form.get('password')
         print(username)
         user = User.query.filter_by(username=username).first()
         
@@ -55,26 +42,14 @@ def logout():
 
 
 @auth.route('/signup', methods = ["GET","POST"])
-#def signup():
-    #reg_form = RegistrationForm()
-    #if reg_form.validate_on_submit():
-        #user = User(email = reg_form.email.data, username = reg_form.username.data, password = reg_form.password.data)
-        #db.session.add(user)
-        #db.session.commit()
-        #welcome_message("Welcome to the Pitch App","email/welcome",user.email,user=user)
-        
-        #return redirect(url_for('auth.login'))
-    
-    #title = "Sign Up"
-    #return render_template('signup.html', RegistrationForm = reg_form, title=title)
     
 def signup():
     if request.method == 'POST':
-        reg_form = request.form
-        username = reg_form.get("username")
-        email = reg_form.get("email")
-        password = reg_form.get("password")
-        confirm_password = reg_form.get("confirm_password")
+        form = request.form
+        username = form.get("username")
+        email = form.get("email")
+        password = form.get("password")
+        confirm_password = form.get("confirm_password")
         
         if username is None or password is None or email is None or confirm_password is None:
             error = 'Please fill all the fields.'
