@@ -7,12 +7,14 @@ from ..models import User,Pitch,Comment,Upvote,Downvote
 
 
 @main.route('/')
+
 def index():
     pitches = Pitch.query.all()
     return render_template('index.html', pitches=pitches)
 
 
 @main.route('/pitches')
+
 #@login_required
 def posts():
     pitches = Pitch.query.all()
@@ -22,6 +24,7 @@ def posts():
 
 
 @main.route('/user')
+
 @login_required
 def user():
     username = current_user.username
@@ -36,6 +39,7 @@ def user():
 
 @main.route('/user/<uname>')
 
+@login_required
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
 
@@ -47,7 +51,7 @@ def profile(uname):
 
 @main.route('/new_pitch', methods = ['POST','GET'])
 
-#@login_required
+@login_required
 def new_pitch():
     form = PitchForm()
     
@@ -86,7 +90,7 @@ def comment(pitch_id):
 
 @main.route('/upvote/<int:id>',methods = ['POST','GET'])
 
-#@login_required
+@login_required
 def upvote(id):
     pitch = Pitch.query.get(id)
     new_upvote = Upvote(pitch=pitch, upvote=1)
@@ -96,7 +100,7 @@ def upvote(id):
 
 @main.route('/downvote/<int:id>',methods = ['POST','GET'])
 
-#@login_required
+@login_required
 def downvote(id):
     pitch = Pitch.query.get(id)
     new_downvote = Downvote(pitch=pitch, downvote=1)
