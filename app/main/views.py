@@ -12,6 +12,28 @@ def index():
     return render_template('index.html', pitches=pitches)
 
 
+@main.route('/pitches')
+#@login_required
+def posts():
+    pitches = Pitch.query.all()
+    upvotes = Upvote.query.all()
+    user = current_user
+    return render_template('pitch_display.html', pitches=pitches, upvotes=upvotes, user=user)
+
+
+@main.route('/user')
+@login_required
+def user():
+    username = current_user.username
+    user = User.query.filter_by(username=username).first()
+    
+    if user is None:
+        return ('not found')
+    
+    title = "User"
+    return render_template('profile.html', user=user, title=title)
+
+
 @main.route('/user/<uname>')
 
 def profile(uname):
@@ -25,15 +47,15 @@ def profile(uname):
 
 @main.route('/new_pitch', methods = ['POST','GET'])
 
-@login_required
+#@login_required
 def new_pitch():
     form = PitchForm()
     
     if form.validate_on_submit():
         title = form.title.data
         pitch = form.pitch.data
-        user_id = current_user
-        new_pitch_object = Pitch(pitch=pitch,user_id=current_user.get_current_object().id,title=title)
+        user_id = current_user.get_current_object().id
+        new_pitch_object = Pitch(pitch=pitch,user_id=user_id,title=title)
         new_pitch_object.save_pitch()
         return redirect(url_for('main.index'))
         
@@ -62,9 +84,9 @@ def comment(pitch_id):
     return render_template('comment.html', form =form, pitch = pitch,comments=comments, user=user, title=title)
 
 
-@main.route('/like/<int:id>',methods = ['POST','GET'])
+@main.route('/upvote/<int:id>',methods = ['POST','GET'])
 
-@login_required
+#@login_required
 def upvote(id):
     pitch = Pitch.query.get(id)
     new_upvote = Upvote(pitch=pitch, upvote=1)
@@ -72,24 +94,11 @@ def upvote(id):
     return redirect(url_for('main.pitches'))
 
 
-@main.route('/dislike/<int:id>',methods = ['POST','GET'])
+@main.route('/downvote/<int:id>',methods = ['POST','GET'])
 
-@login_required
+#@login_required
 def downvote(id):
     pitch = Pitch.query.get(id)
     new_downvote = Downvote(pitch=pitch, downvote=1)
     new_downvote.save()
     return redirect(url_for('main.pitches'))
-
-
-@main.route('/user')
-@login_required
-def user():
-    username = current_user.username
-    user = User.query.filter_by(username=username).first()
-    
-    if user is None:
-        return ('not found')
-    
-    title = "User"
-    return render_template('profile.html', user=user, title=title)

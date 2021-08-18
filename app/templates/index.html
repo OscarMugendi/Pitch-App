@@ -1,5 +1,5 @@
 {% extends 'base.html'%}
-{% from 'pitch_display_macro.html' import display_pitches%}
+<!--{% from 'pitch_display_macro.html' import display_pitches%}-->
 {% block content%}
 {% block styles %}
 {{super()}}
@@ -13,11 +13,11 @@
             <br>
             <hr>
             <br>
-            <!--<div id="buttons d-block mx-auto">
-                <a class="btn btn-outline-secondary text-white" href="/new_pitch"style="font-size:40px">Create new pitch.</a>
+            <div class="container" id="buttons d-block mx-auto">
+                <a class="btn btn-block btn-primary" href="/pitches"style="font-size:40px"><b>View community pitches...</b></a>
                 <br>
-                <a class="btn btn-outline-secondary text-white" href="/pitches"style="font-size:40px">View community pitches.</a>
-            </div>-->
+                <a class="btn btn-block btn-success" href="/new_pitch"style="font-size:40px"><b>Create new pitch...</b></a>
+            </div>
         </div>
     </div>
 </div>
