@@ -12,6 +12,17 @@ def index():
     return render_template('index.html', pitches=pitches)
 
 
+@main.route('/user/<uname>')
+
+def profile(uname):
+    user = User.query.filter_by(username = uname).first()
+
+    if user is None:
+        abort(404)
+
+    return render_template("profile.html", user = user)
+
+
 @main.route('/new_pitch', methods = ['POST','GET'])
 
 @login_required
@@ -21,12 +32,12 @@ def new_pitch():
     if form.validate_on_submit():
         title = form.title.data
         pitch = form.pitch.data
-        user_id = current_user._get_current_object().id
-        new_pitch_object = Pitch(pitch=pitch,user_id=user_id,title=title)
+        user_id = current_user
+        new_pitch_object = Pitch(pitch=pitch,user_id=current_user.get_current_object().id,title=title)
         new_pitch_object.save_pitch()
         return redirect(url_for('main.index'))
         
-    return render_template('new_pitch.html', form = form)
+    return render_template('new_pitch.html', form = form,user_id=current_user)
 
 
 @main.route('/comment/<int:pitch_id>', methods = ['POST','GET'])
