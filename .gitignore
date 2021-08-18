@@ -1,8 +1,9 @@
 # Me
 *.pyc
-virtual/
+virtual
 .env
 .vscode
+__pycache__
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
