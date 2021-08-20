@@ -21,6 +21,7 @@
 - CSS
 - Bootstrap
 - Javascript
+- SQL
 - Heroku
 
 # Live Page
