@@ -6,8 +6,8 @@ load_dotenv()
 class Config:
     DEBUG = True
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:password@localhost/pitchapp'
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:123456789@localhost/pitchapp'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587

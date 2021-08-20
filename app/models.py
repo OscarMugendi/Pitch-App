@@ -4,12 +4,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db, login_manager
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin,db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), nullable=False, unique=True, index=True)
-    email = db.Column(db.String(255), nullable=False, unique=True, index=True)
-    password = db.Column(db.String(255), nullable=False, index=True)
+    username = db.Column(db.String(255),unique=True, index=True)
+    email = db.Column(db.String(255),unique=True, index=True)
+    password = db.Column(db.String(255), index=True)
     pitches = db.relationship('Pitch', backref='user', lazy='dynamic')
     comment = db.relationship('Comment', backref='user', lazy='dynamic')
     upvote = db.relationship('Upvote',backref='user',lazy='dynamic')
@@ -17,14 +17,18 @@ class User(UserMixin, db.Model):
     
     @property
     def set_password(self):
-        raise AttributeError('You cannot read the password attribute')
+        raise AttributeError('Encrypted')
 
     @set_password.setter
     def password(self, password):
-        self.secure_password = generate_password_hash(password)
+        self.password = generate_password_hash(password)
 
     def verify_password(self, password):
-        return check_password_hash(self.secure_password,password) 
+        return check_password_hash(self.password,password) 
+
+    @login_manager.user_loader
+    def loader_user(user_id):
+        return User.query.get(int(user_id))
     
     def save(self):
         db.session.add(self)
@@ -35,11 +39,11 @@ class User(UserMixin, db.Model):
         db.session.commit()
     
     def __repr__(self):
-        return f'User {self.username}'
+        return f'User{self.username}'
 
 class Pitch(db.Model):
-    
     __tablename__ = 'pitches'
+
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(255),nullable = False)
     pitch = db.Column(db.Text(), nullable = False)
@@ -58,7 +62,7 @@ class Pitch(db.Model):
         db.session.commit()
    
     def __repr__(self):
-        return f'Pitch {self.pitch}'
+        return f'Pitch{self.title}'
 
 
 class Comment(db.Model):
@@ -140,12 +144,8 @@ class Downvote(db.Model):
     @classmethod
     def all_downvotes(cls):
         downvote = Downvote.query.order_by('id').all()
-        return downvote
+        return downvotes
 
     def __repr__(self):
         return f'{self.user_id}:{self.pitch_id}'
     
-
-@login_manager.user_loader
-def user_loader(user_id):
-    return User.query.get(int(user_id))

@@ -10,20 +10,25 @@ from ..models import User,Pitch,Comment,Upvote,Downvote
 
 def index():
     pitches = Pitch.query.all()
-    return render_template('index.html', pitches=pitches)
+
+    title = "Home"
+    return render_template('index.html', pitches=pitches, title=title)
 
 
-@main.route('/pitches')
+@main.route('/pitches', methods = ['POST','GET'])
 
 @login_required
 def pitches():
     pitches = Pitch.query.all()
     upvotes = Upvote.query.all()
+    downvotes = Downvote.query.all()
     user = current_user
-    return render_template('pitch_display.html', pitches=pitches, upvotes=upvotes, user=user)
+
+    title = "Home - User"
+    return render_template('index.html', pitches=pitches, upvotes=upvotes, downvotes=downvotes, user=user, title=title)
 
 
-@main.route('/user/<uname>')
+@main.route('/user/<uname>', methods = ['POST','GET'])
 
 @login_required
 def profile(uname):
@@ -34,7 +39,8 @@ def profile(uname):
     if user is None:
         abort(404)
 
-    return render_template("profile.html", user = user, pitches=pitches)
+    title = "User"
+    return render_template("profile.html", user = user, pitches=pitches, title=title)
 
 
 @main.route('/new_pitch', methods = ['POST','GET'])
@@ -70,7 +76,7 @@ def comment(pitch_id):
         new_comment = Comment(comment = comment,user_id = user_id,pitch_id = pitch_id)
         
         new_comment.save_comment()
-        return redirect(url_for('.comment', pitch_id = pitch_id,user_id=user_id))
+        return redirect(url_for('main.comment', pitch_id = pitch_id,user_id=user_id))
     
     title = "Comment"
     return render_template('comment.html', form =form, pitch = pitch,all_comments=all_comments, user=user, title=title)

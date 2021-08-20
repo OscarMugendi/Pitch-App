@@ -23,7 +23,7 @@ def login():
         flash('Authentication Error!')
         
     title = "Login"
-    return render_template('login.html', login_form = form, title=title)
+    return render_template('login.html', LoginForm = form, title=title)
 
 
 @auth.route('/logout')
@@ -39,11 +39,18 @@ def signup():
     form = RegistrationForm()
     
     if form.validate_on_submit():
-        user = User(email = form.email.data, username = form.username.data, password = form.password.data)
-        user.save()
+        user = User(
+                    email = form.email.data,
+                    username = form.username.data,
+                    password = form.password.data
+                )
+        
+        db.session.add(user)
+        db.session.commit()
+        #user.save()
         welcome_message("Welcome to the Pitch Community!","email/welcome",user.email,user=user)
         
         return redirect(url_for('auth.login'))
     
     title = "Signup"
-    return render_template('signup.html', registration_form = form, title=title)
+    return render_template('signup.html', RegistrationForm = form, title=title)
