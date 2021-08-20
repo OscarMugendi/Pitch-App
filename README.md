@@ -14,7 +14,7 @@
 # Technologies Used
 - Visual Studion Code
 - Git
-- Python
+- Python3
 - Pip
 - Flask
 - HTML5
