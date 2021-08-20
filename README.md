@@ -1,7 +1,7 @@
 # Pitch-App
 - A python web application designed to enable users create, edit, comment on and vote for pitches. The application was built on Python3.6
 
-License MIT Copyright(c) 2021
+- License MIT Copyright(c) 2021
 
 # Local Installation
 - Clone the repository from Github.
