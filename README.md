@@ -25,7 +25,7 @@
 - Heroku
 
 # Live Page
-- A live version of the site is currently deployed to:
+- A live version of the site is currently deployed to: https://moringa-pitch-app.herokuapp.com/
 
 # Known Bugs
 - This app is currently unstable and full of bugs. Any advice would be appreciated.
