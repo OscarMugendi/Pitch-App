@@ -1,43 +1,15 @@
 {% extends 'base.html'%}
 
 {% block content %}
-
-<br>
-<h1 style="text-align:center"><b> My Profile </b></h1>
-<br>
 <div class="container">
     <div class="row">
-        <div>
-            <h2><b>Username: {{ user.username| capitalize}} </b></h2>
-            <br>
-            <h4><b>Email address: {{ user.email}} </b></h4>
+        <!-- displaying  Username-->
+        <h3> {{user.username| capitalize}} </h3>
+        <hr>
+        <div class="col-md-9">
+            <p>No of piches: {{pitches}}</p>
+            <p>Date joined: {{date}}</p>
         </div>
     </div>
 </div>
-<hr>
-<br>
-<div class="col-md"></div>
-
-<div class="container">
-    <div class="col-md" id="user">
-        {% if current_user %}
-        <h3 class="text-center">You have {{user.pitches.count()}} pitches</h3>
-        {% for i in pitches%}
-        <div class="pitches">
-            <h5>Title: {{i.title}}</h5>
-            <h6>{{i.pitch}}</h6>
-            <p>{{i.comment.count()}} comments</p>
-        </div>
-     
-        {%endfor%}
-
-        {%else%}
-    
-        <h3>You have no pitches to display.</h3>
-
-        {%endif%}
-    </div>
-</div>
-<br>
-
 {% endblock %}

@@ -3,38 +3,56 @@ from flask_login import login_required, current_user
 from .. import db
 from . import main
 from .forms import PitchForm, CommentForm
-from ..models import User,Pitch,Comment,Upvote,Downvote
-
+from ..models import User,Pitch,Comment
+import datetime
 
 @main.route('/')
-
 def index():
     pitches = Pitch.query.all()
 
     title = "Home"
-    return render_template('index.html', pitches=pitches, title=title)
+    return render_template('index.html', pitches=pitches, title=title, id=id)
 
 
-@main.route('/pitches', methods = ['POST','GET'])
-
+@main.route('/pitch/<int:id>', methods = ['POST','GET'])
 @login_required
-def pitches():
-    pitches = Pitch.query.all()
-    upvotes = Upvote.query.all()
-    downvotes = Downvote.query.all()
-    user = current_user
+def pitches(id):
+    pitch = Pitch.get_pitch(id)
 
-    title = "Home - User"
-    return render_template('index.html', pitches=pitches, upvotes=upvotes, downvotes=downvotes, user=user, title=title)
+    if request.args.get("upvote"):
+        pitch.upvotes = pitch.upvotes + 1
+
+        db.session.add(pitch)
+        db.session.commit()
+
+        return redirect("/pitch/{pitch_id}".format(pitch_id=pitch.id))
+
+    elif request.args.get("downvote"):
+        pitch.downvotes = pitch.downvotes + 1
+
+        db.session.add(pitch)
+        db.session.commit()
+
+        return redirect("/pitch/{pitch_id}".format(pitch_id=pitch.id))
+
+    comment_form = CommentForm()
+    if comment_form.validate_on_submit():
+        comment = comment_form.text.data
+
+        new_comment = Comment(comment = comment,user = current_user,pitch_id = pitch)
+
+        new_comment.save_comment()
 
 
-@main.route('/user/<uname>', methods = ['POST','GET'])
+    comments = Comment.get_comments(pitch)
 
-@login_required
+    return render_template("pitch.html", pitch = pitch, comment_form = comment_form, comments = comments, date = posted_date)
+
+
+@main.route('/user/<uname>')
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
-    user_id = current_user._get_current_object().id
-    pitches = Pitch.query.filter_by(user_id = user_id).all()
+    pitches_count = Pitch.count_pitches(uname)
 
     if user is None:
         abort(404)
@@ -44,87 +62,35 @@ def profile(uname):
 
 
 @main.route('/new_pitch', methods = ['POST','GET'])
-
 @login_required
 def new_pitch():
-    form = PitchForm()
+    pitch_form = PitchForm()
     
-    if form.validate_on_submit():
-        title = form.title.data
-        pitch = form.pitch.data
-        user_id = current_user
-        new_pitch_object = Pitch(pitch=pitch,user_id=current_user.get_current_object().id,title=title)
-        new_pitch_object.save_pitch()
+    if pitch_form.validate_on_submit():
+        title = pitch_form.title.data
+        pitch = pitch_form.pitch.data
+
+        new_pitch = Pitch(title=title,pitch=pitch,user=current_user)
+
+        new_pitch.save_pitch()
         return redirect(url_for('main.index'))
         
-    return render_template('new_pitch.html', form = form,user_id=current_user)
+    title = 'New Pitch'
+    return render_template('new_pitch.html', pitch_form=pitch_form, title=title)
 
 
-@main.route('/comment/<int:pitch_id>', methods = ['POST','GET'])
+@main.route('/user/<uname>/pitches')
+def user_pitches(uname):
+    user = User.query.filter_by(username=uname).first()
+    pitches = Pitch.query.filter_by(user_id = user.id).all()
+    pitches_count = Pitch.count_pitches(uname)
 
-@login_required
-def comment(pitch_id):
-    form = CommentForm()
-    pitch = Pitch.query.get(pitch_id)
-    user = User.query.all()
-    all_comments = Comment.query.filter_by(pitch_id = pitch_id).all()
-    
-    if form.validate_on_submit():
-        comment = form.comment.data 
-        pitch_id = pitch_id
-        user_id = current_user._get_current_object().id
-        new_comment = Comment(comment = comment,user_id = user_id,pitch_id = pitch_id)
-        
-        new_comment.save_comment()
-        return redirect(url_for('main.comment', pitch_id = pitch_id,user_id=user_id))
-    
-    title = "Comment"
-    return render_template('comment.html', form =form, pitch = pitch,all_comments=all_comments, user=user, title=title)
+    return render_template("profile/pitches.html", user=user,pitches=pitches,pitches_count=pitches_count)
 
 
-@main.route('/upvote/<int:id>',methods = ['POST','GET'])
+@main.route('/pitches/all_pitches')
+def all_pitches(id):
 
-@login_required
-def upvote(id):
-    get_pitches = Upvote.get_upvotes(id)
-    valid_string = f'{current_user.id}:{id}'
-    
-    for pitch in get_pitches:
-        to_str = f'{pitch}'
-        print(valid_string+" "+to_str)
-        
-        if valid_string == to_str:
-            
-            return redirect(url_for('main.index',id=id))
-        
-        else:           
-            continue
-        
-    new_upvote = Upvote(user = current_user, pitch_id=id)
-    new_upvote.save()
-    
-    return redirect(url_for('main.index',id=id))
+    pitches = Pitch.get_pitches('id')
 
-
-@main.route('/downvote/<int:id>',methods = ['POST','GET'])
-
-@login_required
-def downvote(id):
-    pitch = Downvote.get_downvotes(id)
-    valid_string = f'{current_user.id}:{id}'
-    
-    for p in pitch:
-        to_str = f'{p}'
-        print(valid_string+" "+to_str)
-        
-        if valid_string == to_str:
-            
-            return redirect(url_for('main.index',id=id))
-        
-        else:
-            continue
-        
-    new_downvote = Downvote(user = current_user, pitch_id=id)
-    new_downvote.save()
-    
-    return redirect(url_for('main.index',id = id))
+    return render_template("all_pitches.html", pitches = pitches)

@@ -10,20 +10,20 @@ from .. import main
 
 @auth.route('/login', methods = ['GET','POST'])
 def login():
-    form = LoginForm()
+    login_form = LoginForm()
     
-    if form.validate_on_submit():
-        user = User.query.filter_by(username = form.username.data).first()
+    if login_form.validate_on_submit():
+        user = User.query.filter_by(username = login_form.username.data).first()
         
-        if user != None and user.verify_password(form.password.data):
-            login_user(user,form.remember.data)
+        if user != None and user.verify_password(login_form.password.data):
+            login_user(user,login_form.remember.data)
             
             return redirect(request.args.get('next') or url_for('main.index'))
         
         flash('Authentication Error!')
         
     title = "Login"
-    return render_template('login.html', form = form, title=title)
+    return render_template('login.html', login_form = login_form, title=title)
 
 
 @auth.route('/logout')
@@ -34,7 +34,6 @@ def logout():
 
 
 @auth.route('/signup', methods = ["GET","POST"])
-    
 def signup():
     form = RegistrationForm()
     
@@ -47,9 +46,10 @@ def signup():
         
         db.session.add(user)
         db.session.commit()
+
         welcome_message("Welcome to the Pitch Community!","email/welcome",user.email,user=user)
         
         return redirect(url_for('auth.login'))
     
     title = "Signup"
-    return render_template('signup.html', form = form, title=title)
+    return render_template('signup.html', registration_form = form, title=title)

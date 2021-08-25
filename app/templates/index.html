@@ -1,22 +1,30 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {% import 'macros.html' as macro %}
 
-{% block content %}
-    
-<div class="container">
-    <ul>
-        <li><a href="#all"><strong>Pitches</strong></a></li>
-    </ul>
+{%block styles%}
+    {{ super() }}
+    <link href="https://fonts.googleapis.com/css?family=Ranga" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Monoton" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cormorant+Upright" rel="stylesheet">
 
-    <br>
-    <hr>
-    <br>
-    
-    <div class="tab-content">
-        <div class="container tab-pane active"><br>
-            {{ macro.display(pitches) }}
+{%endblock%}
+<!-- Content block -->
+{%block content%}
+<div class="jumbotron text-center">
+    <h1>Pitch App</h1>
+</div>
+<div class="container" style="padding-bottom: 20px;">
+    <a href="{{url_for('main.new_pitch')}}" class="btn btn-success">Create pitch</a>
+</div>
+
+<div class="container" style= "font-family: 'Cormorant Upright', serif;">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="well well-lg">
+                <h3>Pitches</h3>
+                <a href="{{url_for('main.all_pitches')}}" class="btn btn-primary -center">View</a>
+            </div>
         </div>
     </div>
 </div>
-<br>
-{% endblock%}
+{%endblock%}

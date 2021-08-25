@@ -1,36 +1,20 @@
-{% macro display(pitches) %}
-<div class="container">
-		<div class="row">
-				{% if pitches %}
-					{% for i in pitches %}
-					<div class="col-md" >
-						<div class="thumbnail" id="carded">
-							<h5 class="card-header">{{i.title}}</h5>
-							<div class="card-body">
-									<p>{{i.pitch}}</p>
-									<footer class="blockquote-footer text-center" > Pitched by: {{i.user.username}}</footer>
-								<div>
-                                    <span class="foot" >{{i.comment.count()}} Comments </span> 
-									<span class="foot" > <a href="{{url_for('main.upvote',id = i.id)}}"><i class="fa fa-thumbs-up" style="font-size:18px;color: green"></i></a> {{i.upvote.count()}}</span>									
-									<span class="foot"> <a href="{{url_for('main.downvote',id = i.id)}}"> <i class="fa fa-thumbs-down" style="color:red;"></i> {{i.downvote.count()}}</a></span>
-                                </div>			
-								<a href="{{url_for('main.comment',pitch_id = i.id)}}" class="btn btn-info btn-sm"> Comment</a>
-							</div>
-						</div>
-					</div>
-					
-					{% endfor %}
+{% macro displayPitches(pitches_list)%}
+    {%for pitch in pitches_list%}
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 review-card">
+            <div class="well well-lg">
+                <h4>{{pitch.pitch_title}}</h4>
+                <p>{{pitch.pitch_content| truncate(100)}}</p>
+                <p>Written by:  {{pitch.user.username}} <a href="/pitch/{{pitch.id}}" class="btn btn-primary pull-right">Read</a> </p>
+            </div>
+        </div>
+    {%endfor%}
+{%endmacro%}
 
-				{% else %}
-
-				<div class="card w-90 mb-3">
-					<div class="card-body">
-				
-						<p class="card-title">No posts to display.</p>
-					</div>
-				</div>
-
-				{% endif %}
-			</div>
-</div>
-{% endmacro %}
+{%macro displayComments(comments_list)%}
+    {%for comment in comments_list%}
+        <div class="col-md-12">
+            <h5>{{comment.user.username}}</h5>
+            <p>{{comment.comment}}</p>
+        </div>
+    {%endfor%}
+{%endmacro%}
