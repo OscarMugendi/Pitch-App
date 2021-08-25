@@ -46,7 +46,7 @@ def pitches(id):
 
     comments = Comment.get_comments(pitch)
 
-    return render_template("pitch.html", pitch = pitch, comment_form = comment_form, comments = comments, date = posted_date)
+    return render_template("pitch.html", pitch = pitch, comment_form = comment_form, comments = comments)
 
 
 @main.route('/user/<uname>')
@@ -85,7 +85,7 @@ def user_pitches(uname):
     pitches = Pitch.query.filter_by(user_id = user.id).all()
     pitches_count = Pitch.count_pitches(uname)
 
-    return render_template("profile/pitches.html", user=user,pitches=pitches,pitches_count=pitches_count)
+    return render_template("pitches.html", user=user,pitches=pitches,pitches_count=pitches_count)
 
 
 @main.route('/pitches/all_pitches')
