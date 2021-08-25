@@ -9,7 +9,7 @@ class User(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255),unique=True, index=True)
     email = db.Column(db.String(255),unique=True, index=True)
-    password = db.Column(db.String(255), index=True)
+    encryptedpassword = db.Column(db.String(255), index=True)
     pitches = db.relationship('Pitch', backref='user', lazy='dynamic')
     comment = db.relationship('Comment', backref='user', lazy='dynamic')
     upvote = db.relationship('Upvote',backref='user',lazy='dynamic')
@@ -21,10 +21,10 @@ class User(UserMixin,db.Model):
 
     @set_password.setter
     def password(self, password):
-        self.password = generate_password_hash(password)
+        self.encryptedpassword = generate_password_hash(password)
 
     def verify_password(self, password):
-        return check_password_hash(self.password,password) 
+        return check_password_hash(self.encryptedpassword,password) 
 
     @login_manager.user_loader
     def loader_user(user_id):

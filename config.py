@@ -1,30 +1,26 @@
 import os
-#from dotenv import load_dotenv
-
-#load_dotenv()
 
 class Config:
     DEBUG = True
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = 'mysterious_key'
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:123456789@localhost/pitchapp'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    #MAIL_USE_SSL = True
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_USERNAME = 'test.user.python3.6@gmail.com'
+    MAIL_PASSWORD = 'codingstudent001'
     
     
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:password@localhost/pitchapp'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:123456789@localhost/pitchapp'
     
 class TestConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:password@localhost/pitchapp'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:123456789@localhost/pitchapp'
     
 class DevConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:password@localhost/pitchapp'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://oscar:123456789@localhost/pitchapp'
     
     DEBUG = True
     ENV = 'development'

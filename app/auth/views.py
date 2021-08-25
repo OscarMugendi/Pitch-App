@@ -1,14 +1,14 @@
 from flask import render_template, request, redirect, url_for,flash
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from app.auth import auth
 from app.models import User
 from ..email import welcome_message
 from .. import db
 from .forms import RegistrationForm,LoginForm
+from .. import main
 
 
 @auth.route('/login', methods = ['GET','POST'])
-    
 def login():
     form = LoginForm()
     
@@ -23,7 +23,7 @@ def login():
         flash('Authentication Error!')
         
     title = "Login"
-    return render_template('login.html', LoginForm = form, title=title)
+    return render_template('login.html', form = form, title=title)
 
 
 @auth.route('/logout')
@@ -47,10 +47,9 @@ def signup():
         
         db.session.add(user)
         db.session.commit()
-        #user.save()
         welcome_message("Welcome to the Pitch Community!","email/welcome",user.email,user=user)
         
         return redirect(url_for('auth.login'))
     
     title = "Signup"
-    return render_template('signup.html', RegistrationForm = form, title=title)
+    return render_template('signup.html', form = form, title=title)

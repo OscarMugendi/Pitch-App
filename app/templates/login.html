@@ -1,29 +1,30 @@
 {% extends 'base.html' %}
-{% import 'bootstrap/wtf.html' as wtf%}
+{% import "bootstrap/wtf.html" as wtf %}
+
 {% block content %}
-{% block styles %}
-{{super()}}
 
-{% endblock %}
+<div class="container" style="text-align: center;">
+    <div>
+        <h3 class="text-center" >Log In</h3> 
 
-<div class="container"> 
-    <div class="row">
-        <div class= "col-md"></div>
-        <div class="col-md" id="login">
-            <h3 class="text-center"><i class="fas fa-sign-in-alt text-center"></i>&nbsp; <strong class="text-center" >Log In</strong></h3> 
-            {% for message in get_flashed_messages() %}
-            <div class="alert alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                {{ message }}
-            </div>
-            {% endfor %}
+        {% for message in get_flashed_messages() %}
 
-            {{wtf.quick_form(login_form)}}
-            <br>
-            <p> Don't have an account?.. <a id="sign" href="{{url_for('auth.signup')}}">Sign up</a></p>
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
         </div>
-     
-        <div clas="col-md"> </div>
+        
+        {% endfor %}
+    </div>
+    <br>
+    <div class="container">
+        <div class="container">
+           {{wtf.quick_form(form)}}
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <p> Don't have an account?.. <a id="sign" href="{{url_for('auth.signup')}}">Sign up</a></p>
     </div>
 </div>
 {% endblock %}
