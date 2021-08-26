@@ -12,24 +12,20 @@
 {%block content%}
 <div class="container" style="font-family: 'Indie Flower', cursive;">
     <div class="row">
-        <h3>{{pitch.title}}</h3>
+        <h3><b>{{pitch.title}}</b></h3>
         <hr>
         <p>{{pitch.pitch}}</p>
-        <span>
-        <a href="/pitch/{{pitch.id}}?upvote=1">
-            <i class="far fa-thumbs-up"></i>
-        </a>{{pitch.upvotes}} <a href="/pitch/{{pitch.id}}?downvote=1">
-            <i class="far fa-thumbs-down"></i>
-        </a>{{pitch.downvotes}}</span>
 
     </div>
+    <br>
     <div class="row">
-        <h4>Comments</h4>
+        <h4><b>Comments</b></h4>
         <hr>
         {% if current_user.is_authenticated %}
             {{ wtf.quick_form(comment_form) }}
         {%endif%}
         {{macro.displayComments(comments)}}
+        <br>
     </div>
 
 </div>

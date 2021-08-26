@@ -37,7 +37,7 @@ def pitches(id):
 
     comment_form = CommentForm()
     if comment_form.validate_on_submit():
-        comment = comment_form.text.data
+        comment = comment_form.comment.data
 
         new_comment = Comment(comment = comment,user = current_user,pitch_id = pitch)
 
@@ -89,8 +89,8 @@ def user_pitches(uname):
 
 
 @main.route('/pitches/all_pitches')
-def all_pitches(id):
+def all_pitches():
 
-    pitches = Pitch.get_pitches('id')
+    pitches = Pitch.get_pitches()
 
     return render_template("all_pitches.html", pitches = pitches)

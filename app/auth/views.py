@@ -52,4 +52,4 @@ def signup():
         return redirect(url_for('auth.login'))
     
     title = "Signup"
-    return render_template('signup.html', registration_form = form, title=title)
+    return render_template('signup.html', form = form, title=title)
